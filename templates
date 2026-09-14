@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<title>بوت Gemini</title>
+<style>
+body{font-family:tahoma;background:#1a1a1a;color:#fff;text-align:center;padding:20px}
+#chat{width:90%;max-width:600px;margin:20px auto;background:#2a2a2a;border-radius:10px;padding:15px;height:400px;overflow-y:auto;text-align:right}
+.msg{margin:10px;padding:10px;border-radius:8px}
+.user{background:#007bff;text-align:left}
+.bot{background:#444}
+input,button{padding:10px;border:none;border-radius:5px;margin:5px}
+input{width:70%;background:#333;color:#fff}
+button{background:#28a745;color:#fff;cursor:pointer}
+</style>
+</head>
+<body>
+<h2>🤖 بوت Gemini</h2>
+<div id="chat"></div>
+<input id="msg" placeholder="اكتب رسالتك...">
+<button onclick="send()">ارسال</button>
+
+<script>
+async function send(){
+  let m=document.getElementById('msg').value;
+  if(!m)return;
+  addMsg(m,'user');
+  document.getElementById('msg').value='';
+  let res=await fetch('/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:m})});
+  let data=await res.json();
+  addMsg(data.reply,'bot');
+}
+function addMsg(t,s){
+  let d=document.createElement('div');
+  d.className='msg '+s;
+  d.innerText=t;
+  document.getElementById('chat').appendChild(d);
+}
+</script>
+</body>
+</html>
